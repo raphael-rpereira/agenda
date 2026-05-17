@@ -3,6 +3,7 @@ import { scheduleData as defaultData } from './scheduleData';
 import ScheduleView from './ScheduleView';
 import BlockModal from './BlockModal';
 import Login from './Login';
+import { generateExportHtml } from './exportHtml';
 
 const STORAGE_KEY = 'agendaData';
 const AUTH_KEY = 'agendaAuth';
@@ -153,6 +154,17 @@ export default function App() {
     setModal(null);
   }
 
+  function handleExport() {
+    const html = generateExportHtml(data);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'agenda-hba.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   function handleReset() {
     if (!window.confirm('Resetar para os dados originais? Todas as edições serão perdidas.')) return;
     localStorage.removeItem(STORAGE_KEY);
@@ -201,6 +213,15 @@ export default function App() {
             }`}
           >
             {editMode ? '✓ Concluir Edição' : '✏️ Editar Agenda'}
+          </button>
+
+          {/* Export */}
+          <button
+            onClick={handleExport}
+            className="px-4 py-2 rounded-lg font-semibold text-sm text-emerald-700 hover:text-emerald-800 border border-emerald-300 hover:border-emerald-400 hover:bg-emerald-50 transition-all"
+            title="Exportar para visualização no celular"
+          >
+            ↓ Exportar
           </button>
 
           {/* Reset */}
