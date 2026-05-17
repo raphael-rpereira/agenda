@@ -27,6 +27,10 @@ export default function App() {
   const [editMode, setEditMode] = useState(false);
   const [modal, setModal] = useState(null);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }, [data]);
+
   function handleLogin() {
     localStorage.setItem(AUTH_KEY, 'true');
     setAuth(true);
@@ -39,10 +43,6 @@ export default function App() {
   }
 
   if (!auth) return <Login onLogin={handleLogin} />;
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
 
   // ── Mutators ──────────────────────────────────────────────────────────────
 
