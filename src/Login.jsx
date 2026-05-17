@@ -7,21 +7,14 @@ export default function Login({ onLogin }) {
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     setError('');
-
-    setTimeout(() => {
-      if (user === CORRECT_USER && pass === CORRECT_PASS) {
-        onLogin();
-      } else {
-        setError('Usuário ou senha incorretos.');
-        setLoading(false);
-      }
-    }, 400);
+    if (user === CORRECT_USER && pass === CORRECT_PASS) {
+      onLogin();
+    } else {
+      setError('Usuário ou senha incorretos.');
+    }
   }
 
   const inputCls =
@@ -79,10 +72,10 @@ export default function Login({ onLogin }) {
 
             <button
               type="submit"
-              disabled={loading || !user || !pass}
+              disabled={!user || !pass}
               className="mt-2 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 text-sm transition-all shadow-sm"
             >
-              {loading ? 'Verificando...' : 'Entrar'}
+              Entrar
             </button>
           </form>
         </div>
