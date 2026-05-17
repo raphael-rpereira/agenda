@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { scheduleData as defaultData } from './scheduleData';
 import ScheduleView from './ScheduleView';
 import BlockModal from './BlockModal';
+import Login from './Login';
 
 const STORAGE_KEY = 'agendaData';
+const AUTH_KEY = 'agendaAuth';
 
 function loadData() {
   try {
@@ -19,10 +21,24 @@ function deepClone(obj) {
 }
 
 export default function App() {
+  const [auth, setAuth] = useState(() => localStorage.getItem(AUTH_KEY) === 'true');
   const [data, setData] = useState(loadData);
   const [period, setPeriod] = useState('weekday');
   const [editMode, setEditMode] = useState(false);
   const [modal, setModal] = useState(null);
+
+  function handleLogin() {
+    localStorage.setItem(AUTH_KEY, 'true');
+    setAuth(true);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem(AUTH_KEY);
+    setAuth(false);
+    setEditMode(false);
+  }
+
+  if (!auth) return <Login onLogin={handleLogin} />;
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -194,6 +210,15 @@ export default function App() {
             title="Restaurar dados originais"
           >
             ↺ Resetar
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-lg font-semibold text-sm text-slate-500 hover:text-slate-800 border border-gray-200 hover:border-gray-400 hover:bg-gray-100 transition-all"
+            title="Sair"
+          >
+            Sair
           </button>
         </div>
       </header>
